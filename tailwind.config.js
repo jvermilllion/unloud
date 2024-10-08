@@ -1,34 +1,16 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   content: [
     "./components/**/*.{js,vue,ts}",
     "./layouts/**/*.vue",
     "./pages/**/*.vue",
     "./plugins/**/*.{js,ts}",
+    "./nuxt.config.{js,ts}",
     "./app.vue",
-    "./error.vue",
   ],
   theme: {
-    extend: {
-      colors: {
-        paper: {
-          light: '#ffffff',
-          dark: '#121212',
-        },
-        ink: {
-          light: '#333333',
-          dark: '#e0e0e0',
-        },
-        action: {
-          light: '#3b82f6',
-          dark: '#60a5fa',
-        },
-      },
-    },
-    fontFamily: {
-      sans: ['Inter', 'sans-serif'],
-    },
+    extend: {},
   },
-  plugins: [require('@tailwindcss/forms')],
+  plugins: [],
   darkMode: 'class',
 }

@@ -1,4 +1,13 @@
 {
-  // https://v3.nuxtjs.org/concepts/typescript
-  "extends": "./.nuxt/tsconfig.json"
+  "compilerOptions": {
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "types": [
+      "@nuxt/types",
+      "@nuxtjs/supabase",
+      "@pinia/nuxt",
+      "@vueuse/nuxt"
+    ]
+  }
 }

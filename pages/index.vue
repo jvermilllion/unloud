@@ -1,68 +1,36 @@
 <template>
-  <div class="p-4">
-    <h1 class="text-3xl font-bold mb-6">Welcome to AudioStream</h1>
-    <SearchBar @search-results="handleSearchResults" />
-    <div v-if="searchResults.length > 0">
-      <h2 class="text-2xl font-semibold mb-4">Search Results</h2>
-      <div v-for="track in searchResults" :key="track.id" class="mb-4 p-4 bg-white dark:bg-gray-800 rounded shadow">
-        <h3 class="text-xl font-semibold">{{ track.title }}</h3>
-        <p>Artist: {{ track.artists.name }}</p>
-        <p>Album: {{ track.albums.title }}</p>
-        <AudioPlayer :audioUrl="track.audio_url" :trackId="track.id" />
-      </div>
-    </div>
-    <div v-else>
-      <div v-if="loading">Loading tracks...</div>
-      <div v-else-if="error">Error: {{ error }}</div>
-      <div v-else>
-        <h2 class="text-2xl font-semibold mb-4">Recent Tracks</h2>
-        <div v-for="track in tracks" :key="track.id" class="mb-4 p-4 bg-white dark:bg-gray-800 rounded shadow">
-          <h3 class="text-xl font-semibold">{{ track.title }}</h3>
-          <p>Artist: {{ track.artist?.name || 'Unknown' }}</p>
-          <AudioPlayer :audioUrl="track.audio_url" :trackId="track.id" />
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8 text-gray-800 dark:text-white">Welcome to Audio Streaming App</h1>
+    <div v-if="user">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">Your Playlists</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div v-for="playlist in playlists" :key="playlist.id" class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+          <h3 class="text-xl font-semibold mb-2 text-gray-800 dark:text-white">{{ playlist.name }}</h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-4">{{ playlist.tracks.length }} tracks</p>
+          <NuxtLink :to="`/playlist/${playlist.id}`" class="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300">View Playlist</NuxtLink>
         </div>
       </div>
     </div>
-    <PlaylistManager class="mt-8" />
+    <div v-else>
+      <p class="text-lg text-gray-600 dark:text-gray-300 mb-4">Please log in to view your playlists and start streaming music.</p>
+      <NuxtLink to="/login" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Log In</NuxtLink>
+    </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useSupabaseClient } from '#imports'
-import AudioPlayer from '~/components/AudioPlayer.vue'
-import SearchBar from '~/components/SearchBar.vue'
-import PlaylistManager from '~/components/PlaylistManager.vue'
-import type { Track } from '~/types/supabase'
+<script setup>
+import { useUserStore } from '~/stores/user'
+import { usePlaylistStore } from '~/stores/playlist'
 
-const supabase = useSupabaseClient()
-const tracks = ref<Track[]>([])
-const searchResults = ref<Track[]>([])
-const loading = ref(true)
-const error = ref<string | null>(null)
+const userStore = useUserStore()
+const playlistStore = usePlaylistStore()
+
+const user = computed(() => userStore.user)
+const playlists = computed(() => playlistStore.playlists)
 
 onMounted(async () => {
-  try {
-    const { data, error: fetchError } = await supabase
-      .from('tracks')
-      .select(`
-        *,
-        artist:artists(name)
-      `)
-      .limit(5)
-
-    if (fetchError) throw fetchError
-
-    tracks.value = data
-  } catch (e) {
-    console.error('Error fetching tracks:', e)
-    error.value = e.message
-  } finally {
-    loading.value = false
+  if (user.value) {
+    await playlistStore.fetchPlaylists()
   }
 })
-
-const handleSearchResults = (results: Track[]) => {
-  searchResults.value = results
-}
 </script>

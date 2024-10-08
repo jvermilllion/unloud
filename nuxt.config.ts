@@ -1,19 +1,19 @@
+// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  strict: true
-},
   modules: [
     '@nuxtjs/supabase',
-    // other modules...
+    '@nuxtjs/tailwindcss',
+    '@pinia/nuxt',
   ],
   supabase: {
-    url: process.env.SUPABASE_URL,
-    key: process.env.SUPABASE_KEY,
     redirectOptions: {
       login: '/login',
-      callback: '/auth/callback',
-      exclude: [],
+      callback: '/confirm',
+      exclude: ['/', '/register'],
     },
   },
-  // other configurations...
+  tailwindcss: {
+    cssPath: '~/assets/css/tailwind.css',
+    configPath: 'tailwind.config.js',
+  },
 })
-

@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-audio-streaming",
+  "name": "audio-streaming-app",
   "private": true,
   "type": "module",
   "scripts": {
@@ -7,9 +7,7 @@
     "dev": "HOST=0.0.0.0 nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "supabase:migrate": "supabase db push",
-    "supabase:generate-types": "supabase gen types typescript --local > types/supabase.ts"
+    "postinstall": "nuxt prepare"
   },
   "dependencies": {
     "nuxt": "^3.13.0",
@@ -17,10 +15,12 @@
     "@nuxtjs/tailwindcss": "^6.11.4",
     "@pinia/nuxt": "^0.5.1",
     "pinia": "^2.1.7",
-    "wavesurfer.js": "^7.7.3"
+    "@vueuse/core": "^10.9.0",
+    "@vueuse/nuxt": "^10.9.0",
+    "howler": "^2.2.4"
   },
   "devDependencies": {
-    "vite": "^5.0.0",
-    "supabase": "^1.106.1"
+    "@nuxtjs/color-mode": "^3.3.2",
+    "@types/howler": "^2.2.11"
   }
 }
