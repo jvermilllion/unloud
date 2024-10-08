@@ -1,4 +1,6 @@
 export default defineNuxtConfig({
+  strict: true
+},
   modules: [
     '@nuxtjs/supabase',
     // other modules...
@@ -14,3 +16,4 @@ export default defineNuxtConfig({
   },
   // other configurations...
 })
+
