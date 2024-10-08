@@ -7,7 +7,30 @@
       <p class="text-red-500">{{ error }}</p>
     </div>
     <div v-else>
-      <!-- Existing content -->
+      <h1 class="text-3xl font-bold mb-4 text-gray-800 dark:text-white">{{ playlist.name }}</h1>
+      <p class="text-gray-600 dark:text-gray-300 mb-4">{{ playlist.description }}</p>
+      <div class="mb-4">
+        <button @click="playAll" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mr-2">
+          Play All
+        </button>
+        <button @click="shufflePlay" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+          Shuffle Play
+        </button>
+      </div>
+      <ul>
+        <li v-for="(track, index) in playlist.tracks" :key="track.id" class="mb-2 p-2 bg-white dark:bg-gray-800 rounded shadow">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="font-semibold text-gray-800 dark:text-white">{{ track.title }}</span>
+              <span class="text-sm text-gray-600 dark:text-gray-300"> - {{ track.artist }}</span>
+            </div>
+            <div>
+              <button @click="playTrack(track)" class="text-blue-500 hover:text-blue-600 mr-2">Play</button>
+              <button @click="removeTrack(track.id)" class="text-red-500 hover:text-red-600">Remove</button>
+            </div>
+          </div>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -38,5 +61,28 @@ onMounted(async () => {
   }
 })
 
-// ... rest of the existing code
+const playAll = () => {
+  audioStore.setPlaylist(playlist.value.tracks)
+  audioStore.playTrack(playlist.value.tracks[0])
+}
+
+const shufflePlay = () => {
+  const shuffledTracks = [...playlist.value.tracks].sort(() => Math.random() - 0.5)
+  audioStore.setPlaylist(shuffledTracks)
+  audioStore.playTrack(shuffledTracks[0])
+}
+
+const playTrack = (track) => {
+  audioStore.setPlaylist(playlist.value.tracks)
+  audioStore.playTrack(track)
+}
+
+const removeTrack = async (trackId) => {
+  try {
+    await playlistStore.removeTrackFromPlaylist(playlist.value.id, trackId)
+    playlist.value.tracks = playlist.value.tracks.filter(t => t.id !== trackId)
+  } catch (err) {
+    console.error('Failed to remove track:', err)
+  }
+}
 </script>

@@ -2,5 +2,11 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".output/public",
   "framework": "nuxt",
-  "ignoreCommand": "if [ \"$VERCEL_ENV\" = \"production\" ]; then exit 1; else exit 0; fi"
+  "ignoreCommand": "if [ \"$VERCEL_ENV\" = \"production\" ]; then exit 1; else exit 0; fi",
+  "build": {
+    "env": {
+      "SUPABASE_URL": "@supabase_url",
+      "SUPABASE_KEY": "@supabase_key"
+    }
+  }
 }
