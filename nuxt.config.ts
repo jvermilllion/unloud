@@ -6,6 +6,8 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
   ],
   supabase: {
+    url: process.env.SUPABASE_URL,
+    key: process.env.SUPABASE_KEY,
     redirectOptions: {
       login: '/login',
       callback: '/confirm',
@@ -15,5 +17,11 @@ export default defineNuxtConfig({
   tailwindcss: {
     cssPath: '~/assets/css/tailwind.css',
     configPath: 'tailwind.config.js',
+  },
+  runtimeConfig: {
+    public: {
+      supabaseUrl: process.env.SUPABASE_URL,
+      supabaseKey: process.env.SUPABASE_KEY,
+    },
   },
 })
